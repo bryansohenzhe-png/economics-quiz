@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>经济学选择题手机版练习</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; padding: 0; }
+  h2 { color: #333; text-align:center; font-size: 22px; }
+  .question { margin-bottom: 20px; font-size: 18px; }
+  .options button { display: block; margin: 10px 0; padding: 12px; width: 100%; font-size: 16px; cursor: pointer; border-radius:5px; }
+  .correct { background-color: #4CAF50; color: white; }
+  .wrong { background-color: #F44336; color: white; }
+  .explanation { margin-top: 10px; color: #555; font-size: 16px; }
+</style>
+</head>
+<body>
+
+<h2>经济学选择题手机版练习</h2>
+<div id="quiz-container">
+  <div class="question" id="question"></div>
+  <div class="options" id="options"></div>
+  <div class="explanation" id="explanation"></div>
+</div>
+
+<script>
+// 示例题库（微观 + 宏观核心题目）
+let questions = [
+  { question: "GDP 是什么的缩写？", options: ["Gross Domestic Product", "General Domestic Price", "Global Development Plan", "Government Debt Policy"], answer: 0, explanation: "GDP 全称是 Gross Domestic Product，即国内生产总值。" },
+  { question: "微观经济学主要研究什么？", options: ["个人和企业的经济行为", "整个国家的经济运行", "国际贸易政策", "金融市场波动"], answer: 0, explanation: "微观经济学主要关注个人、家庭、企业等个体的经济行为。" },
+  { question: "通货膨胀指什么？", options: ["物价普遍上涨", "失业率上升", "GDP 增长放缓", "国际收支顺差"], answer: 0, explanation: "通货膨胀是指物价水平普遍持续上涨的现象。" },
+  { question: "凯恩斯主义认为政府在经济衰退时应该？", options: ["增加支出刺激需求", "减少税收抑制通胀", "减少支出降低赤字", "维持现状不干预"], answer: 0, explanation: "凯恩斯主义主张在经济衰退时通过政府支出刺激总需求，促进经济复苏。" },
+  { question: "完全竞争市场的特点是？", options: ["许多买卖双方、自由进入市场、产品同质", "一个卖方控制市场", "少数卖方，产品差异化", "政府完全干预"], answer: 0, explanation: "完全竞争市场特点包括：大量买卖双方、产品同质、自由进入市场。" }
+];
+
+// 随机打乱题目顺序
+questions = questions.sort(() => Math.random() - 0.5);
+
+let currentQuestion = 0;
+
+function loadQuestion() {
+  const q = questions[currentQuestion];
+  document.getElementById('question').textContent = q.question;
+  const optionsDiv = document.getElementById('options');
+  optionsDiv.innerHTML = '';
+  document.getElementById('explanation').textContent = '';
+
+  const optionIndexes = [0,1,2,3].sort(() => Math.random() - 0.5);
+
+  optionIndexes.forEach(index => {
+    const btn = document.createElement('button');
+    btn.textContent = q.options[index];
+    btn.onclick = () => checkAnswer(index, optionIndexes, btn);
+    optionsDiv.appendChild(btn);
+  });
+}
+
+function checkAnswer(selectedIndex, optionIndexes, btn) {
+  const q = questions[currentQuestion];
+  const buttons = document.querySelectorAll('.options button');
+  buttons.forEach(b => b.disabled = true);
+
+  const correctIndex = optionIndexes.indexOf(q.answer);
+
+  if (selectedIndex === correctIndex) {
+    btn.classList.add('correct');
+    setTimeout(() => {
+      currentQuestion++;
+      if (currentQuestion < questions.length) loadQuestion();
+      else showEnd();
+    }, 800);
+  } else {
+    btn.classList.add('wrong');
+    document.getElementById('explanation').textContent = `正确答案: ${q.options[q.answer]}。解析: ${q.explanation}`;
+  }
+}
+
+function showEnd() {
+  document.getElementById('quiz-container').innerHTML = "<h3>恭喜，你已完成练习！</h3>";
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
